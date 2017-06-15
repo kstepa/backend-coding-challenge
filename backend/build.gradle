@@ -1,0 +1,82 @@
+plugins {
+	id "java"
+	id "eclipse"
+	id "org.flywaydb.flyway" version "4.2.0"
+	id "nu.studer.jooq" version "2.0.6"
+  	id "com.github.johnrengelman.shadow" version '2.0.0'
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "com.sparkjava:spark-core:${sparkVer}"
+    compile "ch.qos.logback:logback-classic:${logbackVer}"
+    compile "org.jooq:jooq:${jooqVer}"
+    compile "org.jooq:jooq-meta:${jooqVer}"
+    compile "com.zaxxer:HikariCP:${hikariVer}"
+    compile "org.flywaydb:flyway-core:${flywayVer}"
+    compile "com.google.code.gson:gson:${gsonVer}"
+    compile "org.aeonbits.owner:owner-java8:${ownerVer}"
+
+    runtime "mysql:mysql-connector-java:${mysqlconnectorVer}"
+    jooqRuntime "mysql:mysql-connector-java:${mysqlconnectorVer}"
+
+    testCompile "junit:junit:${junitVer}"
+    testCompile "com.mashape.unirest:unirest-java:${unirestVer}"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/gen/java']
+        }
+    }
+}
+
+flyway {
+	url = devDbUrl
+	user = devDbUser
+	password = devDbPass
+}
+
+jooq {
+  version = jooqVer
+  edition = "OSS"
+  main (sourceSets.main) {
+       jdbc {
+           driver = devDbDriver
+           url = devDbUrl
+           user = devDbUser
+           password = devDbPass
+       }
+       generator {
+           name = 'org.jooq.util.DefaultGenerator'
+           strategy {
+               name = 'org.jooq.util.DefaultGeneratorStrategy'
+           }
+           database {
+               name = 'org.jooq.util.mysql.MySQLDatabase'
+               excludes = 'schema_version'
+               inputSchema = devDbSchema
+               outputSchemaToDefault = true
+           }
+           generate {
+               deprecated = false
+               pojos = false
+           }
+           target {
+               packageName = 'com.engagetech.expenses.db'
+               directory = "src/gen/java"
+           }
+       }
+   }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': "com.engagetech.expenses.Application"
+    }
+}
