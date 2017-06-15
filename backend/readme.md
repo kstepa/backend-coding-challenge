@@ -18,3 +18,7 @@ grant all privileges on expenses_test.* to 'dev'@'localhost' identified by '123'
 * If using eclipse - import project generated and run tests as JUnit 4 test cases - all should pass. In order to debug from Eclipse run com.engagetech.expenses.Application as a java application.
 * In order to run binaries execute "java -jar build/libs/expenses-all.jar". The expenses-all.jar file is the only distribution. Copy it to server host 
 Full rebuild - "gradle clean flywayClean flywayMigrate generateMainJooqSchemaSource build cleanEclipse eclipse shadowJar" - use with care, flywayClean drops database tables.
+* In order to connect external database specify parameters like below
+```
+java -DdbUrl=jdbc:mysql://somerds.cxplmsbpogqp.eu-west-2.rds.amazonaws.com:3306/expenses -DdbUser=dev -DdbPassword=passw1 -jar expenses-all.jar
+```

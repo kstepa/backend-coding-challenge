@@ -49,6 +49,11 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 		$scope.newExpense = {};
 	};
 
+	$scope.vat = function() {
+		var amt = parseFloat($scope.newExpense.amount);
+		return (!isNaN(amt) && amt > 0) ? (0.2 * amt).toFixed(2) : "";
+	}
+
 	// Initialise scope variables
 	loadExpenses();
 	$scope.clearExpense();
