@@ -1,9 +1,6 @@
 ### Development Environment set up ###
 
-* Prerequisites
-- Mysql (5.7.11+)
-- Java 8
-- Gradle included in repo, no need to install separately
+Prerequisites - Mysql (5.7.11+) and Java 8. Gradle included in repo, no need to install separately. 
 
 * Create development and test databases and user:
   

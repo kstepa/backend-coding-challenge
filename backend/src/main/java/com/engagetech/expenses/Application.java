@@ -2,6 +2,8 @@ package com.engagetech.expenses;
 
 import static spark.Spark.*;
 
+import java.util.Collections;
+
 import org.aeonbits.owner.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ public class Application implements ResponseTransformer {
 		gson = gb.create();
 		
 		this.db = new DB(this.cfg);
+		this.db.migrate();
 		this.expenseSvc = new ExpenseService(this.db);
 	}
 
@@ -54,21 +57,25 @@ public class Application implements ResponseTransformer {
 		exception(APIException.class, (e, req, resp) -> { // expected exception
 			logger.info("API exception processing request " + req.pathInfo(), e);
 			resp.status(((APIException) e).getCode());
-			resp.body(e.getMessage());
+			resp.body(errMsg(e.getMessage()));
 		});
 
 		exception(JsonSyntaxException.class, (e, req, resp) -> {
 			logger.error("Unexpected request body, can'not parse JSON: " + req.pathInfo() + "\n" + req.body(), e);
 			resp.status(400);
-			resp.body("Valid JSON with proper field format expected. " + e.getMessage());
+			resp.body(errMsg("Unexpected field format: " + e.getMessage()));
 		});
 		
 		exception(Exception.class, (e, req, resp) -> {
 			logger.error("Unexpected exception processing request " + req.pathInfo(), e);
 			// unexpected exception
 			resp.status(500);
-			resp.body(e.getMessage());
+			resp.body(errMsg(e.getMessage()));
 		});
+	}
+	
+	private String errMsg(String raw) {
+		return gson.toJson(Collections.singletonMap("err", raw));
 	}
 
 	private void setupRoutes() {

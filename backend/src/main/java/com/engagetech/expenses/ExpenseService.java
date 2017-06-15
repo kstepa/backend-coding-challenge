@@ -44,7 +44,7 @@ public class ExpenseService {
 		}
 		
 		if (ex.getDate().after(new Date())) {
-			throw new FieldValidationException("Expense date could only be in the past: " + ex.getDate());
+			throw new FieldValidationException("Expense date should be in the past");
 		}
 		if (ex.getAmount() <= 0 || ex.getAmount() > MAX_AMT) {
 			throw new FieldValidationException("Expense amount should be positive, not greater than " + MAX_AMT);

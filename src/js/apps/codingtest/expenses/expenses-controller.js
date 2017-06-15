@@ -18,6 +18,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 
 	var restExpenses = $restalchemy.init({ root: $config.apiroot }).at("expenses");
 
+	$scope.errorMsg = null;
 	$scope.dateOptions = {
 		changeMonth: true,
 		changeYear: true,
@@ -32,11 +33,14 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 	}
 
 	$scope.saveExpense = function() {
+		$scope.errorMsg = null;
 		if ($scope.expensesform.$valid) {
 			// Post the expense via REST
 			restExpenses.post($scope.newExpense).then(function() {
 				// Reload new expenses list
 				loadExpenses();
+			}).error(function(data, status) {
+				$scope.errorMsg = data.err;
 			});
 		}
 	};
