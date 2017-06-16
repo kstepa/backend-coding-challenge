@@ -1,6 +1,6 @@
 Note
 ====
-Please follow to [backend documentation](backend/README.md) in order to setup and run it.
+Please follow to [backend documentation](https://github.com/kstepa/backend-coding-challenge/tree/master/backend) in order to setup and run it.
 
 Goal
 ====
