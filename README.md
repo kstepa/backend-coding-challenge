@@ -1,3 +1,7 @@
+Note
+====
+Please follow to [backend documentation](backend/README.md) in order to setup and run it.
+
 Goal
 ====
 Produce a simple web-app backend to complement the supplied front-end code.
