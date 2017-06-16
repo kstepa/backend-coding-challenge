@@ -9,14 +9,16 @@ public class Expense {
 	private Long id; 
 	private Date date;
 	private String reason;
+	private boolean euro;
 	private float amount;
 	private float vat;
 	
 	public Expense() {
+		this.euro = false;
 	}
 
 	public Expense(Date date, String reason, float amount) {
-		super();
+		this();
 		this.date = date;
 		this.reason = reason;
 		this.amount = amount;
@@ -58,6 +60,14 @@ public class Expense {
 	public void setAmount(float amount) {
 		this.amount = amount;
 		this.vat = vat();
+	}
+
+	public boolean isEuro() {
+		return euro;
+	}
+
+	public void setEuro(boolean euro) {
+		this.euro = euro;
 	}
 
 	private float vat() {

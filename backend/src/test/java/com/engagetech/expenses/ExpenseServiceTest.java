@@ -3,6 +3,7 @@ package com.engagetech.expenses;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
@@ -16,18 +17,24 @@ import org.junit.Test;
 import com.engagetech.common.FieldValidationException;
 import com.engagetech.expenses.db.Tables;
 import com.engagetech.expenses.db.tables.records.ExpenseRecord;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class ExpenseServiceTest {
 	static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	static TestUtil tu = TestUtil.get();
 	static SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 	
+	private RateService mockRateSvc = new RateService() {
+		double rate() throws UnirestException {
+			return 0.88;
+		}
+	};
 	private ExpenseService expenseSvc;
 	
 	@Before
 	public void setUp() {
 		tu.cleanTables();
-		expenseSvc = new ExpenseService(tu.db);
+		expenseSvc = new ExpenseService(tu.db, mockRateSvc);
 	}
 	
 	@Test
@@ -82,7 +89,7 @@ public class ExpenseServiceTest {
 			fail("FieldValidationException expected");
 		} 
 		catch (FieldValidationException ex) {
-			assertTrue(ex.getMessage().startsWith("Expense date could only be in the past"));
+			assertTrue(ex.getMessage().startsWith("Expense date should be in the past"));
 		}
 	}
 
@@ -95,5 +102,16 @@ public class ExpenseServiceTest {
 		catch (FieldValidationException ex) {
 			assertTrue(ex.getMessage().startsWith("Expense amount should be positive"));
 		}
+	}
+	
+	@Test
+	public void withExchange() throws Exception {
+		Expense ex = new Expense(sdf.parse("01/01/2016"), "New Year", 100.0f);
+		ex.setEuro(true);
+		expenseSvc.insert(ex);
+		
+		Expense ex1 = expenseSvc.all().get(0);
+		assertFalse(ex1.isEuro());
+		assertEquals(88.0, ex1.getAmount(), 0.0001);
 	}
 }

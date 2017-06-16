@@ -20,12 +20,12 @@ dependencies {
     compile "org.flywaydb:flyway-core:${flywayVer}"
     compile "com.google.code.gson:gson:${gsonVer}"
     compile "org.aeonbits.owner:owner-java8:${ownerVer}"
+    compile "com.mashape.unirest:unirest-java:${unirestVer}"
 
     runtime "mysql:mysql-connector-java:${mysqlconnectorVer}"
     jooqRuntime "mysql:mysql-connector-java:${mysqlconnectorVer}"
 
     testCompile "junit:junit:${junitVer}"
-    testCompile "com.mashape.unirest:unirest-java:${unirestVer}"
 }
 
 sourceSets {

@@ -1,4 +1,5 @@
 package com.engagetech.expenses;
+
 import static org.junit.Assert.assertEquals;
 
 import org.json.JSONObject;
@@ -20,12 +21,12 @@ public class EndToEndTest {
 		app = new Application(tu.cfg);
 		app.up();
 	}
-	
+
 	@AfterClass
 	public static void tearDown() {
 		app.down();
 	}
-	
+
 	@Test
 	public void smoke() throws Exception {
 		JSONObject exp = new JSONObject();
@@ -35,13 +36,13 @@ public class EndToEndTest {
 		assertEquals(200, Unirest.post(url("/expenses")).body(exp).asString().getStatus());
 		exp.put("amount", -100.01);
 		assertEquals(422, Unirest.post(url("/expenses")).body(exp).asString().getStatus());
-		
+
 		HttpResponse<JsonNode> resp = Unirest.get(url("/expenses")).asJson();
 		assertEquals(200, resp.getStatus());
 		assertEquals(1, resp.getBody().getArray().length());
-	}	
-	
+	}
+
 	private static String url(String rel) {
-		return "http://localhost:4567" + rel; 
+		return "http://localhost:4567" + rel;
 	}
 }

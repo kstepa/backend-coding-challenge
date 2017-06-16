@@ -15,10 +15,12 @@ public class ExpenseService {
 	private static final double MAX_AMT = 10000.0;
 	
 	private DB db;
+	private RateService rateSvc;
 
-	public ExpenseService(DB db) {
+	public ExpenseService(DB db, RateService rateSvc) {
 		super();
 		this.db = db;
+		this.rateSvc = rateSvc;
 	}
 	
 	public List<Expense> all() {
@@ -51,7 +53,8 @@ public class ExpenseService {
 		}
 		
 		ExpenseRecord er = new ExpenseRecord();
-		er.setAmount(new BigDecimal(ex.getAmount()));
+		float amt = ex.isEuro() ? rateSvc.poundsFromEuros(ex.getAmount()) : ex.getAmount();
+		er.setAmount(new BigDecimal(amt));
 		er.setDate(new java.sql.Date(ex.getDate().getTime()));
 		er.setReason(ex.getReason());
 		db.dsl.insertInto(Tables.EXPENSE).set(er).execute();

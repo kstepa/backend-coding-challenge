@@ -34,7 +34,7 @@ public class Application implements ResponseTransformer {
 		
 		this.db = new DB(this.cfg);
 		this.db.migrate();
-		this.expenseSvc = new ExpenseService(this.db);
+		this.expenseSvc = new ExpenseService(this.db, new RateService());
 	}
 
 	public void up() {
