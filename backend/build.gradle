@@ -80,3 +80,5 @@ jar {
         attributes 'Main-Class': "com.engagetech.expenses.Application"
     }
 }
+
+compileJava.dependsOn generateMainJooqSchemaSource 
