@@ -29,6 +29,6 @@ java -DdbUrl=jdbc:mysql://somerds.cxplmsbpogqp.eu-west-2.rds.amazonaws.com:3306/
 ```
 * Full rebuild command below. Use with care, flywayClean drops database tables.
 ```
-gradle clean flywayClean flywayMigrate generateMainJooqSchemaSource build cleanEclipse eclipse shadowJar
+./gradlew clean flywayClean flywayMigrate generateMainJooqSchemaSource build cleanEclipse eclipse shadowJar
 ```
 
