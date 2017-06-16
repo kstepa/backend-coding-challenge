@@ -69,7 +69,7 @@ jooq {
            }
            target {
                packageName = 'com.engagetech.expenses.db'
-               directory = "src/gen/java"
+               directory = "./src/gen/java"
            }
        }
    }
