@@ -5,8 +5,6 @@ Prerequisites - Mysql (5.7.11+) and Java 8. Gradle included in repo, no need to 
 * Create development and test databases and user:
   
 ```
-#!sql
-
 create database expenses;
 grant all privileges on expenses.* to 'dev'@'localhost' identified by '123';
 create database expenses_test;
