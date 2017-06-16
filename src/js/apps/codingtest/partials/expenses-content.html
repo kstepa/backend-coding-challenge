@@ -17,8 +17,8 @@
 				<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" />
 			</li>
 <li>
-				<label>VAT</label>
-				<input type="text" readonly="readonly" value="{{vat() | currency:'&pound;'}}" />
+				<label>VAT: </label>
+				<span ng-bind-html="vat()"/>
 			</li>
 
 			<li>

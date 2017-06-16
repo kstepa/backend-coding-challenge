@@ -8,7 +8,7 @@ Expenses controller
 
 var app = angular.module("expenses.controller", []);
 
-app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy", function ExpensesCtrl($rootScope, $scope, $config, $restalchemy) {
+app.controller("ctrlExpenses", ["$rootScope", "$scope", "$filter", "config", "restalchemy", function ExpensesCtrl($rootScope, $scope, $filter, $config, $restalchemy) {
 	// Update the headings
 	$rootScope.mainTitle = "Expenses";
 	$rootScope.mainHeading = "Expenses";
@@ -32,11 +32,23 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 		});
 	}
 
+	var translateEuro = function() {
+		if (typeof($scope.newExpense.amount) === "undefined") return {};
+		var samt = $scope.newExpense.amount.trim().toUpperCase();
+		var amt = parseFloat(samt.replace(/[^\d^\.]/g, ''));
+		
+		return {
+			"amount": amt,
+			"euro": samt.endsWith("EUR")
+		}
+	}
+
 	$scope.saveExpense = function() {
 		$scope.errorMsg = null;
 		if ($scope.expensesform.$valid) {
+			var data = _.merge({}, $scope.newExpense, translateEuro());
 			// Post the expense via REST
-			restExpenses.post($scope.newExpense).then(function() {
+			restExpenses.post(data).then(function() {
 				// Reload new expenses list
 				loadExpenses();
 			}).error(function(data, status) {
@@ -49,9 +61,13 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 		$scope.newExpense = {};
 	};
 
+	
 	$scope.vat = function() {
-		var amt = parseFloat($scope.newExpense.amount);
-		return (!isNaN(amt) && amt > 0) ? (0.2 * amt).toFixed(2) : "";
+		var tra = translateEuro();
+		if (isNaN(tra.amount) || tra.amount < 0) return "";
+		var vat = (0.2 * tra.amount).toFixed(2);
+		var sym = tra.euro ? "&euro;" : "&pound;";
+		return $filter("currency")(vat, sym);
 	}
 
 	// Initialise scope variables
