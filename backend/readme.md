@@ -22,12 +22,13 @@ This command should populate database with initial schema, generate Java DB clas
 ```
 java -jar build/libs/expenses-all.jar
 ```
-The expenses-all.jar file is the only distribution of the backend. Copy it to server host and run with parameters like below to connect to production database.
+Application will connect development database "expenses" configured above with dev/123 credentials and will listen port 4567. Frontend configuration in root repository folder is changed to access that default backend url (http://localhost:4567). 
+* The expenses-all.jar file is the only distribution of the backend. Copy it to server host and run with parameters like below to connect to production database and listen different port: 
 ```
-java -DdbUrl=jdbc:mysql://somerds.cxplmsbpogqp.eu-west-2.rds.amazonaws.com:3306/expenses -DdbUser=someuser -DdbPassword=somepassword -jar expenses-all.jar
+java -DdbUrl=jdbc:mysql://somerds.cxplmsbpogqp.eu-west-2.rds.amazonaws.com:3306/expenses -DdbUser=someuser -DdbPassword=somepassword -DhttpPort=9090 -jar expenses-all.jar
 ```
-* Full rebuild 
+* Full rebuild command below. Use with care, flywayClean drops database tables.
 ```
 gradle clean flywayClean flywayMigrate generateMainJooqSchemaSource build cleanEclipse eclipse shadowJar
 ```
-use with care, flywayClean drops database tables.
+
